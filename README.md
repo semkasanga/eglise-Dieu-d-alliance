@@ -1,45 +1,91 @@
-
 # EGLISE EVANGELIQUE DIEU D'ALLIANCE
 
 ## Premier Module
 Développer les **interfaces CRUD** pour la gestion des membres de l'église via le rôle **gestionnaire**.  
-➡️ **Pour le moment :** nous travaillons uniquement sur les **interfaces (front-end)**, pas encore sur la base de données ni le backend.
+**Pour le moment :** nous travaillons uniquement sur les **interfaces (front-end)**, pas encore sur la base de données ni le backend.
 
-Le backend sera fait uniquement quand tout le monde confirmera avoir telecharger le projet sans problème.
+Le backend sera fait uniquement quand tout le monde confirmera avoir téléchargé le projet sans problème.
 
 
-## ✅ Prérequis
-- **PHP** une version 8.1 ou plus
-- **Composer** une version 2.x
-- **Node.js** une version 18.x
+## Prérequis
+- **PHP** ≥ 8.1
+- **Composer** ≥ 2.x
+- **Node.js** ≥ 18.x
 - **NPM** ≥ 8.x
 
-## Emplacement 
-Pour ceux utilisant **laragon** le dossier **www**
-pour ceux utilisant **Xamp** le dossier **htdocs**
 
-## 🚀 Installation du projet
-1. **Cloner le dépôt :**
+## Emplacement
+- Pour **Laragon** : mettre le projet dans le dossier `www`
+- Pour **XAMPP** : mettre le projet dans le dossier `htdocs`
+
+
+## Installation du projet
+1. **Cloner le dépôt et se déplacer dans le dossier :**
    ```bash
-   git clone https://github.com/semkasanga/eglise-Dieu-d-alliance.git
+git clone https://github.com/semkasanga/eglise-Dieu-d-alliance.git
+cd eglise-Dieu-d-alliance
+```
 
-## Quelques instructions
-Faut pas push sur main
-on va faire des branches de develloppement 
-mais vue que nous somme sur le premier module 
+2. **Installer les dépendances PHP :**
+   ```bash
+composer install
+```
 
-et voici comment les branche doivent etre :
+3. **Installer les dépendances JS :**
+   ```bash
+npm install
+```
 
-- **feature/membres-list** : interface des membres
-- **feature/membres-create** : interface ajout membre
-- **feature/membres-edit**: interface pour la modifiaction
-- **feature/layout** : layout & navigation pour le gestionnaire (on verra si il sera unique ou sera le meme pour les autres)
--**feature/login** : interface de connexion
+4. **Copier le fichier `.env.example` en `.env` :**
+   ```bash
+cp .env.example .env
+```
 
-## Comment faire ?
-pour creer une branche : **git checkout -b nom_branche**
-ex: popur la création de la branche feature/membres-list : **git checkout -b feature/membres-list**
+5. **Générer la clé Laravel :**
+   ```bash
+php artisan key:generate
+```
 
-pour se mettre à jour : **git pull origin main**
+6. **Lancer le serveur Laravel :**
+   ```bash
+php artisan serve
+```
 
+7. **Lancer le serveur front (Vite) :**
+   ```bash
+npm run dev
+```
+
+##  Workflow Git
+ **Ne pas pousser sur `main` directement.**  
+Nous utilisons des branches pour le développement.
+
+### Branches à créer :
+- `feature/membres-list` : interface liste des membres
+- `feature/membres-create` : interface ajout membre
+- `feature/membres-edit` : interface modification membre
+- `feature/layout` : layout & navigation pour le gestionnaire
+- `feature/login` : interface de connexion
+
+### Commandes utiles :
+- **Créer une branche :**
+  ```bash
+git checkout -b feature/membres-list
+```
+- **Se mettre à jour avec la branche principale :**
+  ```bash
+git pull origin main
+```
+- **Pousser votre branche :**
+  ```bash
+git push origin feature/membres-list
+```
+
+Ensuite, créez une **Pull Request** sur GitHub pour fusionner votre branche dans `main`.
+
+
+## Ce qui doit être fait maintenant
+- Créer les interfaces CRUD pour les membres (UI uniquement).
+- Utiliser **Tailwind CSS** pour le design.
+- Pas encore de logique backend ni base de données.
 
