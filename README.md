@@ -21,40 +21,29 @@ Le backend sera fait uniquement quand tout le monde confirmera avoir télécharg
 
 ## Installation du projet
 1. **Cloner le dépôt et se déplacer dans le dossier :**
-   ```bash git clone https://github.com/semkasanga/eglise-Dieu-d-alliance.git
-cd eglise-Dieu-d-alliance
+`git clone https://github.com/semkasanga/eglise-Dieu-d-alliance.git`
+`cd eglise-Dieu-d-alliance`
 
-```
 
 2. **Installer les dépendances PHP :**
-   ```bash
-composer install
-```
+`composer install`
+
 
 3. **Installer les dépendances JS :**
-   ```bash
-npm install
-```
+`npm install`
 
 4. **Copier le fichier `.env.example` en `.env` :**
-   ```bash
-cp .env.example .env
-```
+`cp .env.example .env`
 
 5. **Générer la clé Laravel :**
-   ```bash
-php artisan key:generate
-```
+`php artisan key:generate`
+
 
 6. **Lancer le serveur Laravel :**
-   ```bash
-php artisan serve
-```
+`php artisan serve`
 
 7. **Lancer le serveur front (Vite) :**
-   ```bash
-npm run dev
-```
+`npm run dev`
 
 ##  Workflow Git
  **Ne pas pousser sur `main` directement.**  
@@ -69,17 +58,11 @@ Nous utilisons des branches pour le développement.
 
 ### Commandes utiles :
 - **Créer une branche :**
-  ```bash
-git checkout -b feature/membres-list
-```
+`git checkout -b feature/membres-list`
 - **Se mettre à jour avec la branche principale :**
-  ```bash
-git pull origin main
-```
+`git pull origin main`
 - **Pousser votre branche :**
-  ```bash
-git push origin feature/membres-list
-```
+`git push origin feature/membres-list`
 
 Ensuite, créez une **Pull Request** sur GitHub pour fusionner votre branche dans `main`.
 
