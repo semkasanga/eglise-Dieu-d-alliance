@@ -2,11 +2,15 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\MembreController;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/membres', [MembreController::class, 'index'])->name('membres.index');
+Route::get('/membres/create', [MembreController::class, 'create'])->name('membres.create');
+Route::get('/membres/{id}', [MembreController::class, 'show'])->name('membres.show');
 // interface Dashboard de gestion de membre
 Route::get('/backoffice/gestion-membre/dashboard', function () {
     return view('backoffice.gestion-membre.dashboard');
