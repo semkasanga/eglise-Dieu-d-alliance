@@ -15,24 +15,29 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body class="font-sans text-gray-900 antialiased">
-        <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100  dark:bg-gradient-to-br from-blue-600 via-blue-900 to-blue-650">
+        <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100  dark:bg-gradient-to-br from-blue-600 via-blue-950 to-blue-900">
             
     <!-- Logo -->
-    <div class="flex justify-center mb-6">
-      <div class="w-20 h-20 bg-white rounded-xl flex items-center justify-center shadow-lg">
+    <div class="flex justify-center mb-3">
+      <div class="w-20 h-20 bg-white rounded-xl flex items-center justify-center shadow-lg">   
         <img src="{{ asset('images/logo.png') }}" alt="Logo Église" class="w-14 h-14 object-contain">
       </div>
     </div>
 
     <!-- Titre -->
-    <h1 class="text-2xl font-bold mb-1">Système de Gestion d'Église</h1>
-    <p class="text-blue-200 mb-8">
+    <h1 class="text-2xl font-bold mb-1 text-white">Système de Gestion d'Église</h1>
+    <p class="text-white mb-2">
       Connectez-vous pour accéder à votre espace
     </p>
 
-            <div class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white dark:bg-gray-800 shadow-md overflow-hidden sm:rounded-lg">
+            <div class="w-full sm:max-w-md mt-6 px-3 py-2 bg-white dark:bg-white shadow-md overflow-hidden sm:rounded-lg">
                 {{ $slot }}
             </div>
+            
+         <!-- Footer -->
+      <p class="text-sm text-white mt-6 text-center">
+        © 2025 Système de Gestion d'Église. Tous droits réservés.
+      </p>
         </div>
     </body>
 </html>
