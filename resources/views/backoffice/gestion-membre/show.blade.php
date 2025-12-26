@@ -10,7 +10,7 @@
     <div class="container mx-auto px-4 py-8 max-w-4xl">
         <!-- Header avec retour -->
         <div class="mb-6">
-            <a href="{{ route('membres.index') }}" class="inline-flex items-center text-gray-600 hover:text-gray-900 transition mb-4">
+            <a href="{{ route('backoffice.membres-list') }}" class="inline-flex items-center text-gray-600 hover:text-gray-900 transition mb-4">
                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
                 </svg>
@@ -142,13 +142,13 @@
             <!-- Boutons d'action -->
             <div class="px-8 pb-8 flex gap-3">
                 <a 
-                    href="{{ route('membres.index') }}"
+                    href="{{ route('backoffice.membres-list') }}"
                     class="flex-1 px-6 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition font-medium text-center"
                 >
                     Retour
                 </a>
                 <button 
-                    onclick="window.location.href='{{ route('membres.index') }}'"
+                    onclick="window.location.href='{{ route('backoffice.membres-list') }}'"
                     class="flex-1 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-medium flex items-center justify-center gap-2"
                 >
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

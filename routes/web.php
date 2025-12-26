@@ -4,9 +4,9 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MembreController;
 
-// Route racine - Redirection vers la liste des membres
+// Route racine - Login
 Route::get('/', function () {
-    return redirect()->route('backoffice.membres-list');
+    return view('auth.login');
 });
 
 // Route de test
@@ -14,13 +14,13 @@ Route::get('/test', function () {
     return 'Laravel fonctionne correctement !';
 });
 
-Route::get('/', function () {
-    return view('auth.login');
-});
-
+// Menu principal (Panel admin)
+Route::get('/backoffice/menu', function () {
+    return view('backoffice.menu');
+})->name('backoffice.menu');
 
 // Dashboard de gestion de membre
-Route::get('/backoffice/gestion-membre/dashboard', [MembreController::class, 'dashboard'])->name('backoffice.dashboard');
+Route::get('/backoffice/gestion-membre/dashboard', [MembreController::class, 'dashboard'])->name('backoffice.gestion-membre.dashboard');
 
 
 // Gestion des Membres
@@ -38,14 +38,9 @@ return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');*/
 
 Route::middleware('auth')->group(function () {
-Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::get('/', function(){
-return view('auth.login');
-});
-
-
-//require __DIR__ . '/auth.php';
+require __DIR__ . '/auth.php';
