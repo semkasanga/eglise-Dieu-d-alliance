@@ -9,3 +9,4 @@ Route::get('/', function () {
 
 Route::get('/membres', [MembreController::class, 'index'])->name('membres.index');
 Route::get('/membres/create', [MembreController::class, 'create'])->name('membres.create');
+Route::get('/membres/{id}', [MembreController::class, 'show'])->name('membres.show');

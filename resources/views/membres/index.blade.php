@@ -200,7 +200,11 @@
 
                         <!-- Actions -->
                         <div class="col-span-1 flex items-center justify-center gap-2">
-                            <button class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition" title="Voir">
+                            <button 
+                                onclick='openViewModal(@json($membre))' 
+                                class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition" 
+                                title="Voir"
+                            >
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
@@ -547,6 +551,91 @@
         </div>
     </div>
 
+    <!-- Modal Détails Membre -->
+    <!-- Modal Détails Membre -->
+    <div id="modal-voir-membre" class="hidden fixed inset-0 backdrop-blur-sm z-50 flex items-center justify-center p-4" style="background-color: rgba(0, 0, 0, 0.15);">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl">
+            <div class="p-6">
+                <!-- Header -->
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-2xl font-bold text-blue-900">Détails du Membre</h2>
+                    <button type="button" onclick="closeViewModal()" class="text-gray-400 hover:text-gray-600 transition">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Profil -->
+                <div class="flex items-start gap-6 mb-6">
+                    <div id="view-avatar" class="w-20 h-20 rounded-full flex items-center justify-center text-white text-2xl font-bold flex-shrink-0">
+                    </div>
+                    <div class="flex-1">
+                        <h3 id="view-nom" class="text-xl font-bold text-gray-900 mb-2"></h3>
+                        <div class="flex items-center gap-2">
+                            <span id="view-statut-badge" class="px-3 py-1 rounded-full text-sm font-medium"></span>
+                            <span id="view-baptise-badge" class="px-3 py-1 bg-blue-50 text-blue-600 rounded-full text-sm font-medium hidden">
+                                <svg class="w-4 h-4 inline-block" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M10 2a1 1 0 011 1v1.323l3.954 1.582 1.599-.8a1 1 0 01.894 1.79l-1.233.616 1.738 5.42a1 1 0 01-.285 1.05A3.989 3.989 0 0115 15a3.989 3.989 0 01-2.667-1.019 1 1 0 01-.285-1.05l1.738-5.42-1.233-.617a1 1 0 01.894-1.788l1.599.799L11 4.323V3a1 1 0 011-1zm-5 8.274l-.818 2.552c-.25.78.025 1.632.647 2.24.626.613 1.471.918 2.171.918s1.545-.305 2.171-.918c.622-.608.897-1.46.647-2.24L9 10.274v3.051a2.537 2.537 0 01-2 0v-3.051zm0-5.274A1 1 0 016 6v1.323l3.954 1.582 1.599-.8a1 1 0 11.894 1.79l-1.233.616 1.738 5.42a1 1 0 01-.285 1.05A3.989 3.989 0 0110 18a3.989 3.989 0 01-2.667-1.019 1 1 0 01-.285-1.05l1.738-5.42-1.233-.617a1 1 0 11.894-1.788l1.599.799L6 7.323V6a1 1 0 01-1-1z"/>
+                                </svg>
+                                Baptisé
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Informations -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div>
+                        <p class="text-sm font-medium text-gray-500 mb-1">EMAIL</p>
+                        <p id="view-email" class="text-gray-900"></p>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-gray-500 mb-1">TÉLÉPHONE</p>
+                        <p id="view-telephone" class="text-gray-900"></p>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-gray-500 mb-1">MINISTÈRE</p>
+                        <p id="view-ministere" class="text-gray-900"></p>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-gray-500 mb-1">DATE D'ADHÉSION</p>
+                        <p id="view-date-adhesion" class="text-gray-900"></p>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-gray-500 mb-1">DATE DE NAISSANCE</p>
+                        <p id="view-date-naissance" class="text-gray-900"></p>
+                    </div>
+                    <div class="md:col-span-2">
+                        <p class="text-sm font-medium text-gray-500 mb-1">ADRESSE</p>
+                        <p id="view-adresse" class="text-gray-900"></p>
+                    </div>
+                </div>
+
+                <!-- Buttons -->
+                <div class="flex gap-3">
+                    <button 
+                        type="button" 
+                        onclick="openEditFromView()"
+                        class="flex-1 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-medium flex items-center justify-center gap-2"
+                    >
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                        </svg>
+                        Modifier
+                    </button>
+                    <button 
+                        type="button" 
+                        onclick="closeViewModal()"
+                        class="flex-1 px-6 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition font-medium"
+                    >
+                        Fermer
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Modal Supprimer Membre -->
     <div id="modal-supprimer-membre" class="hidden fixed inset-0 backdrop-blur-sm z-50 flex items-center justify-center p-4" style="background-color: rgba(0, 0, 0, 0.15);">
         <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6">
@@ -619,6 +708,60 @@
         }
 
         let membreToDelete = null;
+        let currentMembre = null;
+
+        function openViewModal(membre) {
+            currentMembre = membre;
+            
+            // Remplir les informations
+            document.getElementById('view-nom').textContent = membre.nom;
+            document.getElementById('view-email').textContent = membre.email;
+            document.getElementById('view-telephone').textContent = membre.telephone;
+            document.getElementById('view-ministere').textContent = membre.ministere;
+            document.getElementById('view-date-adhesion').textContent = membre.date_adhesion;
+            document.getElementById('view-date-naissance').textContent = membre.date_naissance || 'Non renseigné';
+            document.getElementById('view-adresse').textContent = membre.adresse || 'Non renseigné';
+            
+            // Avatar
+            const avatar = document.getElementById('view-avatar');
+            avatar.className = `w-20 h-20 ${membre.color} rounded-full flex items-center justify-center text-white text-2xl font-bold flex-shrink-0`;
+            avatar.textContent = membre.initiales;
+            
+            // Statut badge
+            const statutBadge = document.getElementById('view-statut-badge');
+            if (membre.statut === 'Actif') {
+                statutBadge.className = 'px-3 py-1 bg-green-50 text-green-600 rounded-full text-sm font-medium';
+                statutBadge.textContent = 'Actif';
+            } else {
+                statutBadge.className = 'px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-sm font-medium';
+                statutBadge.textContent = 'Inactif';
+            }
+            
+            // Baptisé badge
+            const baptiseBadge = document.getElementById('view-baptise-badge');
+            if (membre.baptise) {
+                baptiseBadge.classList.remove('hidden');
+            } else {
+                baptiseBadge.classList.add('hidden');
+            }
+            
+            // Afficher le modal
+            document.getElementById('modal-voir-membre').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeViewModal() {
+            document.getElementById('modal-voir-membre').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+            currentMembre = null;
+        }
+
+        function openEditFromView() {
+            if (currentMembre) {
+                closeViewModal();
+                openEditModal(currentMembre);
+            }
+        }
 
         function openDeleteModal(membre) {
             membreToDelete = membre;
@@ -662,12 +805,20 @@
             }
         });
 
+        // Fermer le modal de visualisation en cliquant en dehors
+        document.getElementById('modal-voir-membre').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeViewModal();
+            }
+        });
+
         // Fermer avec la touche Échap
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
                 closeModal();
                 closeEditModal();
                 closeDeleteModal();
+                closeViewModal();
             }
         });
     </script>
