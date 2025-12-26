@@ -7,6 +7,13 @@ Développer les **interfaces CRUD** pour la gestion des membres de l'église via
 Le backend sera fait uniquement quand tout le monde confirmera avoir téléchargé le projet sans problème.
 
 
+## Arborescence du projet (module de gestion)
+## Dossier dans lequelle on travail
+on est entrain de devellopper le module de gestion des membres et pour ce faire, voici comment proceder :
+le dossier se trouve dans : **resources/views/backoffice/gestion-membre**
+c'est là que toutes nos manipulations présente de font pas ailleur
+ne creer pas de nouveau dossier, si vous pensez qu'il faut le faire informer le groupe.
+
 ## Prérequis
 - **PHP** ≥ 8.1
 - **Composer** ≥ 2.x
@@ -72,5 +79,5 @@ Ensuite, créez une **Pull Request** sur GitHub pour fusionner votre branche dan
 - Utiliser **Tailwind CSS** pour le design.
 - Pas encore de logique backend ni base de données.
 
-## Pour ce qui est des couleur referez vous à la page deja faite
-## Respecter un peu l'ordre des dossiers comme deja fait
+## ☣️ Attention
+Vous devais respecter les etapes avant d'initialiser le projet, sinon ça ne va pas fonctionner
