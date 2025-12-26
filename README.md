@@ -72,3 +72,5 @@ Ensuite, créez une **Pull Request** sur GitHub pour fusionner votre branche dan
 - Utiliser **Tailwind CSS** pour le design.
 - Pas encore de logique backend ni base de données.
 
+## Pour ce qui est des couleur referez vous à la page deja faite
+## Respecter un peu l'ordre des dossiers comme deja fait
