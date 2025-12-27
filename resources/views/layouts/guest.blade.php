@@ -12,10 +12,10 @@
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
         <!-- Scripts -->
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
+        <script src="https://cdn.tailwindcss.com"></script>
     </head>
     <body class="font-sans text-gray-900 antialiased">
-        <div class="min-h-screen flex flex-col justify-center items-center bg-blue-900 px-4">
+        <div class="min-h-screen flex flex-col justify-center items-center px-4" style="background-color: #003d82;">
             
             <!-- Logo -->
             <div class="flex justify-center mb-6">
