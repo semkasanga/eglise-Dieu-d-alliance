@@ -16,10 +16,9 @@
                     </svg>
                 </div>
                 <input id="email" type="email" name="email" value="{{ old('email') }}" required autofocus autocomplete="username"
-                    class="block w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    class="block w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('email') border-red-500 @enderror"
                     placeholder="votre.email@example.com">
             </div>
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
         </div>
 
         <!-- Password -->
@@ -32,7 +31,7 @@
                     </svg>
                 </div>
                 <input id="password" type="password" name="password" required autocomplete="current-password"
-                    class="block w-full pl-10 pr-10 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    class="block w-full pl-10 pr-10 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('password') border-red-500 @enderror"
                     placeholder="••••••••">
                 <button type="button" onclick="togglePassword()" class="absolute inset-y-0 right-0 pr-3 flex items-center">
                     <svg id="eye-icon" class="h-5 w-5 text-gray-400 hover:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -41,7 +40,6 @@
                     </svg>
                 </button>
             </div>
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
         </div>
 
         <!-- Options -->
@@ -64,6 +62,58 @@
     </form>
 
     <script>
+        // Afficher les erreurs en pop-up
+        @if($errors->any())
+            window.addEventListener('DOMContentLoaded', function() {
+                @foreach($errors->all() as $error)
+                    showNotification('error', @json($error));
+                @endforeach
+            });
+        @endif
+
+        // Afficher le statut de session en pop-up
+        @if(session('status'))
+            window.addEventListener('DOMContentLoaded', function() {
+                showNotification('success', @json(session('status')));
+            });
+        @endif
+
+        function showNotification(type, message) {
+            const notificationHTML = `
+                <div class="login-notification fixed top-4 right-4 z-[9999] ${type === 'success' ? 'bg-green-50 border-green-500' : 'bg-red-50 border-red-500'} border-l-4 p-4 rounded-lg shadow-xl max-w-md animate-slide-in">
+                    <div class="flex items-start">
+                        <svg class="w-6 h-6 ${type === 'success' ? 'text-green-500' : 'text-red-500'} mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            ${type === 'success' 
+                                ? '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />'
+                                : '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />'
+                            }
+                        </svg>
+                        <div class="flex-1">
+                            <p class="${type === 'success' ? 'text-green-700' : 'text-red-700'} font-medium">${message}</p>
+                        </div>
+                        <button onclick="this.parentElement.parentElement.remove()" class="ml-4 ${type === 'success' ? 'text-green-400 hover:text-green-600' : 'text-red-400 hover:text-red-600'}">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.insertAdjacentHTML('beforeend', notificationHTML);
+            
+            // Auto-fermer après 6 secondes
+            const notifications = document.querySelectorAll('.login-notification');
+            const lastNotification = notifications[notifications.length - 1];
+            setTimeout(() => {
+                if (lastNotification) {
+                    lastNotification.style.opacity = '0';
+                    lastNotification.style.transition = 'opacity 0.5s';
+                    setTimeout(() => lastNotification.remove(), 500);
+                }
+            }, 6000);
+        }
+    
         function togglePassword() {
             const passwordInput = document.getElementById('password');
             const eyeIcon = document.getElementById('eye-icon');
@@ -82,4 +132,21 @@
             }
         }
     </script>
+    
+    <style>
+        @keyframes slide-in {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        .animate-slide-in {
+            animation: slide-in 0.3s ease-out;
+        }
+    </style>
 </x-guest-layout>
