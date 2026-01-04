@@ -71,7 +71,16 @@ class MembreController extends Controller
             unset($validated['mot_de_passe']);
         }
 
-        Membre::create($validated);
+        $membre = Membre::create($validated);
+
+        // Si c'est une requête AJAX
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Membre ajouté avec succès !',
+                'membre' => $membre
+            ]);
+        }
 
         return redirect()->route('backoffice.membres-list')
             ->with('success', 'Membre ajouté avec succès !');
@@ -134,6 +143,15 @@ class MembreController extends Controller
         }
 
         $membre->update($validated);
+
+        // Si c'est une requête AJAX
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Membre modifié avec succès !',
+                'membre' => $membre
+            ]);
+        }
 
         return redirect()->route('backoffice.membres-list')
             ->with('success', 'Membre modifié avec succès !');

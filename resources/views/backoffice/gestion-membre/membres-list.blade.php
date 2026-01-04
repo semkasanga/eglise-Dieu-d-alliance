@@ -31,6 +31,13 @@
         <div class="max-w-7xl mx-auto mb-8">
             <div class="flex items-center justify-between">
                 <div class="flex items-center gap-4">
+                    <a href="{{ route('backoffice.menu') }}" 
+                        class="bg-gray-100 hover:bg-gray-200 text-gray-700 p-2 rounded-lg transition-colors">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                        </svg>
+                    </a>
+                    <img src="{{ asset('images/logo.png') }}" alt="Logo" class="w-12 h-12 object-contain">
                     <div>
                         <h1 class="text-2xl font-bold text-blue-900">Gestion des Membres</h1>
                         <p class="text-gray-600 mt-1">Gérez tous les membres de l'église</p>
@@ -49,7 +56,7 @@
         <div class="max-w-7xl mx-auto">
             <!-- Filters -->
             <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
                     <div class="lg:col-span-2">
                         <input type="text" id="search-membres" placeholder="Rechercher par nom ou email..."
                             class="w-full pl-4 pr-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
@@ -84,6 +91,15 @@
                             <option value="1">Baptisés</option>
                             <option value="0">Non baptisés</option>
                         </select>
+                    </div>
+                    <div>
+                        <button id="reset-filters" 
+                            class="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-3 rounded-lg flex items-center justify-center gap-2 font-medium transition-colors">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                            </svg>
+                            Réinitialiser
+                        </button>
                     </div>
                 </div>
             </div>
@@ -860,14 +876,33 @@
             }
         });
 
-        // Fonction de filtrage des membres
+        // Fonction de filtrage des membres avec cache
+        let filterCache = {};
+        
+        function getCacheKey() {
+            const searchValue = document.getElementById('search-membres').value.toLowerCase();
+            const statusValue = document.getElementById('filter-status').value.toLowerCase();
+            const ministereValue = document.getElementById('filter-ministere').value.toLowerCase();
+            const baptiseValue = document.getElementById('filter-baptise').value;
+            return `${searchValue}-${statusValue}-${ministereValue}-${baptiseValue}`;
+        }
+        
         function filterMembers() {
+            const cacheKey = getCacheKey();
+            
+            // Vérifier le cache
+            if (filterCache[cacheKey]) {
+                applyFilterResults(filterCache[cacheKey]);
+                return;
+            }
+            
             const searchValue = document.getElementById('search-membres').value.toLowerCase();
             const statusValue = document.getElementById('filter-status').value.toLowerCase();
             const ministereValue = document.getElementById('filter-ministere').value.toLowerCase();
             const baptiseValue = document.getElementById('filter-baptise').value;
             const rows = document.querySelectorAll('.membre-row');
 
+            const results = [];
             rows.forEach(row => {
                 const name = row.getAttribute('data-name').toLowerCase();
                 const email = row.getAttribute('data-email').toLowerCase();
@@ -880,13 +915,30 @@
                 const matchesMinistere = ministereValue === 'all' || ministere === ministereValue;
                 const matchesBaptise = baptiseValue === 'all' || baptise === baptiseValue;
 
-                if (matchesSearch && matchesStatus && matchesMinistere && matchesBaptise) {
-                    row.style.display = '';
-                } else {
-                    row.style.display = 'none';
-                }
+                const shouldShow = matchesSearch && matchesStatus && matchesMinistere && matchesBaptise;
+                results.push({ row, shouldShow });
+            });
+            
+            // Mettre en cache les résultats
+            filterCache[cacheKey] = results;
+            applyFilterResults(results);
+        }
+        
+        function applyFilterResults(results) {
+            results.forEach(({ row, shouldShow }) => {
+                row.style.display = shouldShow ? '' : 'none';
             });
         }
+        
+        // Bouton réinitialiser
+        document.getElementById('reset-filters').addEventListener('click', function() {
+            document.getElementById('search-membres').value = '';
+            document.getElementById('filter-status').value = 'all';
+            document.getElementById('filter-ministere').value = 'all';
+            document.getElementById('filter-baptise').value = 'all';
+            filterCache = {}; // Vider le cache
+            filterMembers();
+        });
 
         // Écouter les événements de filtrage
         document.getElementById('search-membres').addEventListener('input', filterMembers);
@@ -921,5 +973,191 @@
                 setTimeout(() => errorMessage.remove(), 500);
             }
         }, 5000);
+        
+        // Soumission AJAX pour le formulaire de création
+        document.querySelector('#modal-nouveau-membre form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const form = this;
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            
+            // Désactiver le bouton et afficher un loader
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<svg class="animate-spin h-5 w-5 mx-auto" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>';
+            
+            try {
+                const formData = new FormData(form);
+                const response = await fetch(form.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || formData.get('_token')
+                    }
+                });
+                
+                if (!response.ok) {
+                    if (response.status === 422) {
+                        const errors = await response.json();
+                        let errorMessages = [];
+                        if (errors.errors) {
+                            for (const [field, messages] of Object.entries(errors.errors)) {
+                                errorMessages = errorMessages.concat(messages);
+                            }
+                        }
+                        throw new Error(errorMessages.join('\n') || 'Erreur de validation');
+                    } else if (response.status === 500) {
+                        throw new Error('Erreur serveur. Veuillez réessayer plus tard.');
+                    } else if (response.status === 419) {
+                        throw new Error('Session expirée. Veuillez rafraîchir la page.');
+                    } else {
+                        throw new Error(`Erreur HTTP ${response.status}`);
+                    }
+                }
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showNotification('success', data.message);
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1000);
+                } else {
+                    throw new Error(data.message || 'Une erreur est survenue');
+                }
+            } catch (error) {
+                console.error('Erreur:', error);
+                showNotification('error', error.message || 'Erreur lors de l\'enregistrement');
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalText;
+            }
+        });
+        
+        // Soumission AJAX pour le formulaire de modification
+        document.querySelector('#modal-modifier-membre form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const form = this;
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<svg class="animate-spin h-5 w-5 mx-auto" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>';
+            
+            try {
+                const formData = new FormData(form);
+                const response = await fetch(form.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || formData.get('_token')
+                    }
+                });
+                
+                if (!response.ok) {
+                    if (response.status === 422) {
+                        const errors = await response.json();
+                        let errorMessages = [];
+                        if (errors.errors) {
+                            for (const [field, messages] of Object.entries(errors.errors)) {
+                                errorMessages = errorMessages.concat(messages);
+                            }
+                        }
+                        throw new Error(errorMessages.join('\n') || 'Erreur de validation');
+                    } else if (response.status === 500) {
+                        throw new Error('Erreur serveur. Veuillez réessayer plus tard.');
+                    } else if (response.status === 404) {
+                        throw new Error('Membre introuvable.');
+                    } else if (response.status === 419) {
+                        throw new Error('Session expirée. Veuillez rafraîchir la page.');
+                    } else {
+                        throw new Error(`Erreur HTTP ${response.status}`);
+                    }
+                }
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showNotification('success', data.message);
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1000);
+                } else {
+                    throw new Error(data.message || 'Une erreur est survenue');
+                }
+            } catch (error) {
+                console.error('Erreur:', error);
+                showNotification('error', error.message || 'Erreur lors de la modification');
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalText;
+            }
+        });
+        
+        // Fonction pour afficher les notifications
+        function showNotification(type, message) {
+            // Gérer les messages multi-lignes
+            const messageLines = message.split('\n').filter(line => line.trim());
+            const messageHTML = messageLines.length > 1 
+                ? '<ul class="list-disc list-inside space-y-1">' + messageLines.map(line => `<li>${line}</li>`).join('') + '</ul>'
+                : `<p class="${type === 'success' ? 'text-green-700' : 'text-red-700'} font-medium">${message}</p>`;
+            
+            const notificationHTML = `
+                <div id="ajax-notification" class="fixed top-4 right-4 z-[60] ${type === 'success' ? 'bg-green-50 border-green-500' : 'bg-red-50 border-red-500'} border-l-4 p-4 rounded-lg shadow-xl max-w-md animate-slide-in">
+                    <div class="flex items-start gap-3">
+                        <svg class="w-6 h-6 ${type === 'success' ? 'text-green-500' : 'text-red-500'} flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            ${type === 'success' 
+                                ? '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />'
+                                : '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />'
+                            }
+                        </svg>
+                        <div class="flex-1 ${type === 'success' ? 'text-green-700' : 'text-red-700'}">
+                            ${messageHTML}
+                        </div>
+                        <button onclick="document.getElementById('ajax-notification').remove()" class="${type === 'success' ? 'text-green-400 hover:text-green-600' : 'text-red-400 hover:text-red-600'} flex-shrink-0">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            // Supprimer l'ancienne notification si elle existe
+            const oldNotif = document.getElementById('ajax-notification');
+            if (oldNotif) oldNotif.remove();
+            
+            // Insérer la nouvelle notification
+            document.body.insertAdjacentHTML('beforeend', notificationHTML);
+            
+            // Supprimer après 7 secondes pour les erreurs (plus de temps pour lire)
+            const timeout = type === 'error' ? 7000 : 5000;
+            setTimeout(() => {
+                const notif = document.getElementById('ajax-notification');
+                if (notif) {
+                    notif.style.opacity = '0';
+                    notif.style.transition = 'opacity 0.5s';
+                    setTimeout(() => notif.remove(), 500);
+                }
+            }, timeout);
+        }
     </script>
+    
+    <style>
+        @keyframes slide-in {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        .animate-slide-in {
+            animation: slide-in 0.3s ease-out;
+        }
+    </style>
 @endsection

@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="utf-8">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Backoffice - Église')</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -46,9 +47,8 @@
                 </button>
 
                 <div class="flex items-center gap-3">
-                    <div
-                        class="w-12 h-12 bg-indigo-600 rounded-xl flex items-center justify-center text-white font-bold text-xs shadow-lg shadow-indigo-200">
-                        LOGO
+                    <div class="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-lg">
+                        <img src="{{ asset('images/logo.png') }}" alt="Logo" class="w-10 h-10 object-contain">
                     </div>
                     <h1 class="text-lg font-bold tracking-tight text-gray-900 leading-tight">Gestion membres</h1>
                 </div>
@@ -89,14 +89,17 @@
 
             {{-- Footer Sidebar --}}
             <div class="p-4 border-t border-gray-100">
-                <button
-                    class="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-semibold text-red-600 hover:bg-red-50 rounded-xl transition-colors">
-                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                    </svg>
-                    Déconnexion
-                </button>
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button type="submit"
+                        class="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-semibold text-red-600 hover:bg-red-50 rounded-xl transition-colors">
+                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                        </svg>
+                        Déconnexion
+                    </button>
+                </form>
             </div>
         </aside>
 
